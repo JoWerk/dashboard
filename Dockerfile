@@ -1,12 +1,13 @@
 # Use a modern Python version (this runs inside the container, so it's fine!)
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # Set working directory
 WORKDIR /app
 
 # Copy your requirements file and install
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of your project
 COPY . .
