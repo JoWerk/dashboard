@@ -1,0 +1,6 @@
+.git
+__pycache__
+venv
+.env
+token.json
+client_secret.json
