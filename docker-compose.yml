@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: dashboard_app
+    # This maps your Mac's port 8000 to the Container's port 8000
+    ports:
+      - "8000:8000"
+    # This 'mounts' your current folder into the container.
+    # Any code changes you make in VS Code will update the app instantly!
+    volumes:
+      - .:/app
+    # This keeps your SQLite database persistent outside the container
+    # so you don't lose your data when you stop the app.
+    environment:
+      - PYTHONUNBUFFERED=1
+    # Automatically restarts the dashboard if the Mac reboots or the app crashes
+    restart: always
