@@ -41,10 +41,48 @@
             min-width: 0; /* Forces grid to respect boundaries */
         }
 
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
         header h1 {
-            margin: 0 0 20px 0;
+            margin: 0;
             font-size: 2.2rem;
             font-weight: 700;
+        }
+
+        .calendar-legend {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .legend-item {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-bg);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .legend-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .legend-item .placeholder {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--text-dim);
         }
 
         /* THE GRID - Fixed Column logic */
@@ -143,12 +181,40 @@
         .agenda-item {
             background: var(--card-bg);
             border-radius: 18px;
-            padding: 18px;
+            padding: 15px;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
             border-left: 5px solid var(--accent-blue);
         }
+
+        .agenda-image {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid;
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--panel-bg);
+        }
+
+        .agenda-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .agenda-details {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
         .agenda-time { font-size: 0.75rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
-        .agenda-summary { font-size: 1.1rem; font-weight: 600; margin-top: 6px; }
+        .agenda-summary { font-size: 1.1rem; font-weight: 600; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .status-pill {
             margin-top: 20px; font-size: 0.8rem; color: #10b981;
@@ -160,7 +226,27 @@
 <body>
 
     <main>
-        <header><h1>{{ month_name }}</h1></header>
+        <header>
+            <h1>{{ month_name }}</h1>
+            <div class="calendar-legend">
+                <!-- Person 1 (Has image) -->
+                <div class="legend-item" style="border-color: #10b981;">
+                    <img src="{% static 'images/josh.png' %}" alt="Josh">
+                </div>
+                <!-- Person 2 (Has image) -->
+                <div class="legend-item" style="border-color: #ec4899;">
+                    <img src="{% static 'images/jenna.png' %}" alt="Jenna">
+                </div>
+                <!-- Person 3 (Has image) -->
+                <div class="legend-item" style="border-color: #f59e0b;">
+                    <img src="{% static 'images/cayden.png' %}" alt="Cayden">
+                </div>
+                <!-- Person 4 (Has image) -->
+                <div class="legend-item" style="border-color: #a855f7;">
+                    <img src="{% static 'images/steph.png' %}" alt="Steph">
+                </div>
+            </div>
+        </header>
 
         <div class="calendar-grid" style="grid-template-rows: 30px repeat({{ week_count }}, 1fr);">
             {% for name in day_names %}<div class="day-header">{{ name }}</div>{% endfor %}
@@ -196,10 +282,17 @@
         <div class="agenda-container">
             {% for event in today_events %}
             <div class="agenda-item" style="border-left-color: {{ event.color }};">
-                <div class="agenda-time">
-                    {% if event.display_time %}{{ event.display_time }}{% else %}All Day{% endif %}
+                <div class="agenda-image" style="border-color: {{ event.color }};">
+                    {% if event.image %}
+                    <img src="{% static event.image %}" alt="{{ event.summary }}">
+                    {% endif %}
                 </div>
-                <div class="agenda-summary">{{ event.summary }}</div>
+                <div class="agenda-details">
+                    <div class="agenda-time">
+                        {% if event.display_time %}{{ event.display_time }}{% else %}All Day{% endif %}
+                    </div>
+                    <div class="agenda-summary">{{ event.summary }}</div>
+                </div>
             </div>
             {% empty %}
             <div style="color: var(--text-dim); font-style: italic; text-align: center; margin-top: 30px;">

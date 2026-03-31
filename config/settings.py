@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.7.159', 'localhost', '127.0.0.1', '*']
+ALLOWED_HOSTS = [os.getenv('SERVICE_HOST'), 'localhost', '127.0.0.1', '*']
 
 # Application definition
 
@@ -120,3 +120,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 DASHBOARD_CALENDARS = ['My calendar', 'Cayden',  'Jenna', 'Steph', 'Werkau']
+
+# Google API Configuration
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
+GOOGLE_PROJECT_ID = os.getenv('GOOGLE_PROJECT_ID')
