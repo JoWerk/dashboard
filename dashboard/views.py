@@ -9,8 +9,20 @@ from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 
 # Configuration
-CLIENT_SECRET_FILE = os.path.join(settings.BASE_DIR, 'client_secret.json')
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+
+def get_google_client_config():
+    return {
+        "web": {
+            "client_id": settings.GOOGLE_CLIENT_ID,
+            "project_id": settings.GOOGLE_PROJECT_ID,
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            "client_secret": settings.GOOGLE_CLIENT_SECRET,
+            "redirect_uris": ["http://localhost:8000/google/callback/"]
+        }
+    }
 
 
 def home(request):
@@ -55,7 +67,20 @@ def home(request):
                     for event in events_res.get('items', []):
                         raw_start = event['start'].get('dateTime') or event['start'].get('date')
                         clean_date = raw_start[:10]
+                        
+                        cal_name = entry.get('summary', '')
+                        img = 'josh.png'
+                        if 'Cayden' in cal_name:
+                            img = 'cayden.png'
+                        elif 'Jenna' in cal_name:
+                            img = 'jenna.png'
+                        elif 'Steph' in cal_name:
+                            img = 'steph.png'
+                        elif 'My calendar' in cal_name or 'Werkau' in cal_name:
+                            img = 'josh.png'
+
                         event['color'] = entry.get('backgroundColor', '#3d92ff')
+                        event['image'] = f'images/{img}'
 
                         # 12-Hour Time & Duration Logic
                         if 'dateTime' in event['start']:
@@ -105,7 +130,8 @@ def home(request):
 
 
 def google_login(request):
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(CLIENT_SECRET_FILE, scopes=SCOPES)
+    client_config = get_google_client_config()
+    flow = google_auth_oauthlib.flow.Flow.from_client_config(client_config, scopes=SCOPES)
     flow.redirect_uri = 'http://localhost:8000/google/callback/'
     auth_url, state = flow.authorization_url(access_type='offline', prompt='consent')
     request.session['state'] = state
@@ -114,7 +140,8 @@ def google_login(request):
 
 def google_callback(request):
     state = request.session.get('state')
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(CLIENT_SECRET_FILE, scopes=SCOPES, state=state)
+    client_config = get_google_client_config()
+    flow = google_auth_oauthlib.flow.Flow.from_client_config(client_config, scopes=SCOPES, state=state)
     flow.redirect_uri = 'http://localhost:8000/google/callback/'
     flow.fetch_token(authorization_response=request.get_full_path())
     with open('token.json', 'w') as token:
