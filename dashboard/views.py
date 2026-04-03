@@ -57,6 +57,7 @@ def home(request):
             time_max = datetime.combine(month_days[-1][-1], datetime.max.time()).isoformat() + 'Z'
 
             calendar_list = service.calendarList().list().execute()
+
             for entry in calendar_list.get('items', []):
                 if entry.get('summary') in SELECTED_CALENDARS:
                     events_res = service.events().list(
@@ -69,18 +70,31 @@ def home(request):
                         clean_date = raw_start[:10]
                         
                         cal_name = entry.get('summary', '')
-                        img = 'josh.png'
+                        img = None
+                        # Default color if not found
+                        color = entry.get('backgroundColor', '#3d92ff') 
+                        
                         if 'Cayden' in cal_name:
                             img = 'cayden.png'
+                            color = '#f59e0b'
                         elif 'Jenna' in cal_name:
                             img = 'jenna.png'
+                            color = '#ec4899'
                         elif 'Steph' in cal_name:
                             img = 'steph.png'
-                        elif 'My calendar' in cal_name or 'Werkau' in cal_name:
+                            color = '#a855f7'
+                        elif 'Josh' in cal_name:
                             img = 'josh.png'
-
-                        event['color'] = entry.get('backgroundColor', '#3d92ff')
-                        event['image'] = f'images/{img}'
+                            color = '#3d92ff'
+                        elif 'Werkau' in cal_name:
+                            img = None # No image for Werkau
+                            color = '#10b981'
+                        
+                        event['color'] = color
+                        if img:
+                            event['image'] = f'images/{img}'
+                        else:
+                            event['image'] = None
 
                         # 12-Hour Time & Duration Logic
                         if 'dateTime' in event['start']:
