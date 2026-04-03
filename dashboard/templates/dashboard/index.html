@@ -229,21 +229,25 @@
         <header>
             <h1>{{ month_name }}</h1>
             <div class="calendar-legend">
-                <!-- Person 1 (Has image) -->
-                <div class="legend-item" style="border-color: #10b981;">
+                <!-- Person 1 (Josh) -->
+                <div class="legend-item" style="border-color: #3d92ff;">
                     <img src="{% static 'images/josh.png' %}" alt="Josh">
                 </div>
-                <!-- Person 2 (Has image) -->
+                <!-- Person 2 (Jenna) -->
                 <div class="legend-item" style="border-color: #ec4899;">
                     <img src="{% static 'images/jenna.png' %}" alt="Jenna">
                 </div>
-                <!-- Person 3 (Has image) -->
+                <!-- Person 3 (Cayden) -->
                 <div class="legend-item" style="border-color: #f59e0b;">
                     <img src="{% static 'images/cayden.png' %}" alt="Cayden">
                 </div>
-                <!-- Person 4 (Has image) -->
+                <!-- Person 4 (Steph) -->
                 <div class="legend-item" style="border-color: #a855f7;">
                     <img src="{% static 'images/steph.png' %}" alt="Steph">
+                </div>
+                <!-- Person 5 (Family / Werkau Placeholder) -->
+                <div class="legend-item" style="border-color: #10b981;">
+                    <span class="placeholder" style="color: #10b981;">W</span>
                 </div>
             </div>
         </header>
@@ -283,8 +287,10 @@
             {% for event in today_events %}
             <div class="agenda-item" style="border-left-color: {{ event.color }};">
                 <div class="agenda-image" style="border-color: {{ event.color }};">
-                    {% if event.image %}
+                    {% if event.image and event.image != 'None' %}
                     <img src="{% static event.image %}" alt="{{ event.summary }}">
+                    {% else %}
+                    <span class="placeholder" style="color: {{ event.color }};">W</span>
                     {% endif %}
                 </div>
                 <div class="agenda-details">

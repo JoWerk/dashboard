@@ -119,7 +119,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-DASHBOARD_CALENDARS = ['My calendar', 'Cayden',  'Jenna', 'Steph', 'Werkau']
+DASHBOARD_CALENDARS = ['Werkau', 'Cayden', 'Jenna', 'Steph', 'Josh']
 
 # Google API Configuration
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
